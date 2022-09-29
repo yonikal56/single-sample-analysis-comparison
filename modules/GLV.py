@@ -52,7 +52,7 @@ class GLV:
         initials = self.get_random_initials()
         data = self.solve_model(initials)
         populations = np.array([a[-1] for a in data])
-        return populations
+        return populations / sum(populations)
 
     def get_samples(self, m):
         samples = []

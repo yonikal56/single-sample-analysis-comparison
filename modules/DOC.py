@@ -3,7 +3,7 @@ import math
 
 
 class DOC:
-    epsilon = math.pow(10, -4)
+    epsilon = math.pow(10, -5)
 
     def dkl(self, x, y):
         return sum([(x[k] * math.log(x[k] / y[k])) for k in range(len(x))])

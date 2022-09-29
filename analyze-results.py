@@ -18,7 +18,7 @@ with open(file_path) as file:
 graphs = graph.Graph(1)
 
 df = pd.DataFrame.from_dict(data)
-df.loc['mean'] = df.mean()
+#df.loc['mean'] = df.mean()
 df['random'] = 100 / df['cohorts']
 df['distance.proportion'] = df['distance.between_groups'] / df['distance.in_group'] * 100
 df['distance.absolute'] = df['distance.between_groups'] - df['distance.in_group']

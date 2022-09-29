@@ -63,15 +63,15 @@ def run_test(data, m, samples, real):
 
 
 num_of_runs = 1
-m_values = range(20, 51, 5)
+m_values = [100] * 10
 num_of_samples = 100
 bound = 0.025
 probability = 0.1
-initial_samples = 1000
+initial_samples = 500
 
 # create two different GLV models with m samples
 file_path = 'samples.json'
-data = GLV.generate_models(initial_samples, cohorts, file_path, bound=bound, probability=probability, force=True)
+data = GLV.generate_models(initial_samples, cohorts, file_path, bound=bound, probability=probability)
 
 samples, real = GLV.generate_random_samples(data, num_of_samples)
 for m in m_values:
