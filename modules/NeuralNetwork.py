@@ -37,5 +37,8 @@ class NeuralNetwork:
         all_predicts = self.__model.predict(samples).tolist()
         return [predict.index(max(predict)) for predict in all_predicts]
 
+    def predict_real(self, cohort, samples):
+        return self.predict(samples)
+
     def __str__(self):
         return "Neural Network"

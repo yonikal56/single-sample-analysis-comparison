@@ -3,8 +3,8 @@ from scipy.spatial import distance
 
 
 class DistanceCheck:
-    methods = {'Bray-Curtis': distance.braycurtis,
-               'Euclidean': distance.euclidean}
+    methods = {'Bray-Curtis': (distance.braycurtis, 0.3),
+               'Euclidean': (distance.euclidean, 2)}
 
     def __str__(self):
         return f'{list(self.methods.keys())[self.__method]} Dissimilarity'
@@ -31,7 +31,7 @@ class DistanceCheck:
 
     @staticmethod
     def calculate_distance(x, y, method):
-        return list(DistanceCheck.methods.values())[method](x, y)
+        return list(DistanceCheck.methods.values())[method][0](x, y)
 
     def calculate_mean_distance(self, cohort, sample):
         distances = np.array([DistanceCheck.calculate_distance(sample, x, self.__method) for x in cohort])
@@ -45,3 +45,6 @@ class DistanceCheck:
                 distances.append(self.calculate_mean_distance(model["cohort"], sample))
             results.append(distances.index(min(distances)))
         return results
+
+    def predict_real(self, cohort, samples):
+        return self.predict(samples)

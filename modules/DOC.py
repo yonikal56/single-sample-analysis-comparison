@@ -6,7 +6,7 @@ class DOC:
     epsilon = math.pow(10, -5)
 
     def dkl(self, x, y):
-        return sum([(x[k] * math.log(x[k] / y[k])) for k in range(len(x))])
+        return sum([((x[k] + DOC.epsilon) * math.log((x[k] + DOC.epsilon) / (y[k] + DOC.epsilon))) for k in range(len(x))])
 
     def get_shared(self, xi, xj):
         return [key for key in range(len(xi)) if xi[key] > self.epsilon and xj[key] > self.epsilon]

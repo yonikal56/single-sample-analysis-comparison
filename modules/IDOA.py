@@ -1,5 +1,5 @@
 import numpy as np
-
+import math
 from modules.DOC import DOC
 
 
@@ -31,6 +31,13 @@ class IDOA:
                 results.append([idoa_values.index(min(idoa_values)), idoa_values])
             else:
                 results.append(idoa_values.index(min(idoa_values)))
+        return results
+
+    def predict_real(self, cohort, samples):
+        upper_value = -1 * math.pow(10, -2)
+        results = []
+        for sample in samples:
+            results.append(0 if (self.calculate_IDOA(cohort, sample, False) < upper_value) else 1)
         return results
 
     def __str__(self):

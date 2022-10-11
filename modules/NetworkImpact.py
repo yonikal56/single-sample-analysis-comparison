@@ -84,6 +84,9 @@ class NetworkImpact:
         del progress
         return results
 
+    def predict_real(self, cohort, samples):
+        return self.predict(samples)
+
 
 class NetworkImpactHandler:
     def __init__(self, predictions, method):
@@ -92,6 +95,9 @@ class NetworkImpactHandler:
 
     def predict(self, samples):
         return self.__predictions[:, self.__method]
+
+    def predict_real(self, cohort, samples):
+        return self.predict(samples)
 
     def __str__(self):
         types = ['structural difference', 'weight difference', 'theta']

@@ -4,6 +4,7 @@ from scipy.integrate import odeint
 import json
 import os.path
 from modules.progressbar import ProgressBar
+from modules.DOC import DOC
 
 
 class GLV:
@@ -47,6 +48,30 @@ class GLV:
     def solve_model(self, initials, time=50, time_fractions=5):
         t = np.linspace(0, time, time_fractions)
         return odeint(GLV.model, initials, t, args=(self.__A, self.__r)).T
+
+    def get_shuffled_sample(self, cohort):
+        samples = cohort.copy()
+        sample = random.choice(samples)
+        non_zero_indexes = [i for i in range(len(sample)) if sample[i] > DOC.epsilon]
+        new_indexes = random.sample(non_zero_indexes, len(non_zero_indexes))
+        new_sample = sample.copy()
+        for i, j in zip(non_zero_indexes, new_indexes):
+            new_sample[j] = sample[i]
+        new_sample = np.array(new_sample)
+        # for i in range(len(sample)):
+        #     if sample[i] > DOC.epsilon:
+        #         sample[i] = random.choice([sam for sam in samples if sam[i] > DOC.epsilon])[i]
+        # new_sample = np.array(sample)
+        return new_sample / sum(new_sample)
+
+    def get_shuffled_samples(self, m, cohort):
+        samples = []
+        progress = ProgressBar(m, f'creating {str(m)} shuffled samples', 25)
+        for i in range(m):
+            samples.append(self.get_shuffled_sample(cohort))
+            progress.update()
+        del progress
+        return samples
 
     def get_sample(self):
         initials = self.get_random_initials()
@@ -112,6 +137,20 @@ def generate_random_samples(data, num):
         model = GLV(r=chosen_model['r'], A=chosen_model['A'])
         samples.append(model.get_sample())
         real.append(chosen_model['index'])
+        progress.update()
+    del progress
+    return samples, real
+
+
+def generate_random_shuffled_samples(chosen_model, num):
+    samples = []
+    real = []
+    progress = ProgressBar(num, f'creating {str(num)} shuffled samples', 25)
+    for i in range(num):
+        model = GLV(r=chosen_model['r'], A=chosen_model['A'])
+        is_real = GLV.decision(0.5)
+        samples.append(model.get_sample() if is_real else model.get_shuffled_sample(chosen_model['cohort']))
+        real.append(0 if is_real else 1)
         progress.update()
     del progress
     return samples, real
