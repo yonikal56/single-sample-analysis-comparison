@@ -33,12 +33,14 @@ class IDOA:
                 results.append(idoa_values.index(min(idoa_values)))
         return results
 
+    # def calculate_upper_value(self, cohort):
+    #     idoa_values = [self.calculate_IDOA(cohort[:i] + cohort[i+1:], cohort[i]) for i in range(len(cohort))]
+    #     idoa_values.sort()
+    #     bound = round(len(cohort) * 0.95)
+    #     return idoa_values[bound - 1]
+
     def predict_real(self, cohort, samples):
-        upper_value = -1 * math.pow(10, -2)
-        results = []
-        for sample in samples:
-            results.append(0 if (self.calculate_IDOA(cohort, sample, False) < upper_value) else 1)
-        return results
+        return [self.calculate_IDOA(cohort, sample, False) for sample in samples]
 
     def __str__(self):
         return "IDOA"

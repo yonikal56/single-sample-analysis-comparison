@@ -10,8 +10,30 @@ class NetworkImpact:
     def __init__(self, data):
         self.__data = data
         self.__networks = []
+        self.__bounds = None
+        self.__methods = [self.predict_structural_difference, self.predict_weight_difference,
+                          self.predict_theta,
+                          self.predict_theta2]
         for model in self.__data['models']:
             self.__networks.append(self.calculate_network(np.array(model['cohort'])))
+
+    def calculate_bounds(self, cohort):
+        m = len(cohort)
+        progress = ProgressBar(m, f'calculating {str(m)} samples for upper boundary', 50)
+        params = []
+        cohort = np.array(cohort)
+        network_with = self.calculate_network(cohort)
+        for i in range(m):
+            network_without = self.calculate_network(np.append(cohort[:i], cohort[i + 1:], axis=0))
+            params.append([method(network_with, network_without) for method in self.__methods])
+            progress.update()
+        del progress
+        self.__bounds = []
+        for k in range(len(self.__methods)):
+            param_values = [param[k] for param in params]
+            param_values.sort()
+            bound = round(len(cohort) * 0.95)
+            self.__bounds.append(param_values[bound - 1])
 
     @staticmethod
     def unweighted_jaccard_similarity(x, y):
@@ -52,6 +74,21 @@ class NetworkImpact:
         return s / count
 
     def predict_theta(self, network_a, network_b):
+        increased_weight_count = 0
+        decreased_weight_count = 0
+        n = GLV.numOfPopulations
+        for i in range(n):
+            for j in range(i + 1, n):
+                if DOC.epsilon < abs(network_a[0][i][j]) and abs(network_b[0][i][j]) > DOC.epsilon \
+                        and network_a[0][i][j] != network_b[0][i][j]:
+                    if network_b[0][i][j] < network_a[0][i][j]:
+                        decreased_weight_count += 1
+                    else:
+                        increased_weight_count += 1
+        val = (decreased_weight_count + DOC.epsilon) / (increased_weight_count + DOC.epsilon)
+        return abs(1 - val)
+
+    def predict_theta2(self, network_a, network_b):
         different_weight_count = 0
         decreased_weight_count = 0
         n = GLV.numOfPopulations
@@ -62,10 +99,32 @@ class NetworkImpact:
                     different_weight_count += 1
                     if network_b[0][i][j] < network_a[0][i][j]:
                         decreased_weight_count += 1
-        return abs(0.5 - (decreased_weight_count / float(different_weight_count))) if different_weight_count > 0 else 0.5
+        val = (decreased_weight_count + DOC.epsilon) / (different_weight_count + DOC.epsilon)
+        return abs(0.5 - val)
 
     def predict(self, samples):
-        methods = [self.predict_structural_difference, self.predict_weight_difference, self.predict_theta]
+        method_indexes = [0, 1, 2]
+        methods = [self.__methods[i] for i in method_indexes]
+        return self.calculate_prediction(samples, methods)
+
+    def predict_real(self, cohort, samples):
+        method_indexes = [0, 1, 2, 3]
+        methods = [self.__methods[i] for i in method_indexes]
+        results = []
+        m = len(samples)
+        progress = ProgressBar(m, f'evaluating {str(m)} samples with network impact method', 50)
+        network_without = self.calculate_network(np.array(cohort))
+        for n in range(m):
+            sample = samples[n]
+            network_with = self.calculate_network(np.append(cohort, [sample], axis=0))
+            params = [method(network_without, network_with) for method in methods]
+            predictions = [params[k] for k in range(len(methods))]
+            results.append(predictions)
+            progress.update()
+        del progress
+        return results
+
+    def calculate_prediction(self, samples, methods):
         results = []
         m = len(samples)
         progress = ProgressBar(m, f'evaluating {str(m)} samples with network impact method', 50)
@@ -84,9 +143,6 @@ class NetworkImpact:
         del progress
         return results
 
-    def predict_real(self, cohort, samples):
-        return self.predict(samples)
-
 
 class NetworkImpactHandler:
     def __init__(self, predictions, method):
@@ -100,5 +156,5 @@ class NetworkImpactHandler:
         return self.predict(samples)
 
     def __str__(self):
-        types = ['structural difference', 'weight difference', 'theta']
+        types = ['structural difference', 'weight difference', 'theta', 'theta2']
         return f'Network Impact - {types[self.__method]}'

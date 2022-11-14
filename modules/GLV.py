@@ -47,22 +47,15 @@ class GLV:
 
     def solve_model(self, initials, time=50, time_fractions=5):
         t = np.linspace(0, time, time_fractions)
-        return odeint(GLV.model, initials, t, args=(self.__A, self.__r)).T
+        noisyB = self.get_random_A()
+        delta = np.random.uniform(0, 0.3)
+        noisyA = (1 - delta) * np.array(self.__A) + delta * np.array(noisyB)
+        return odeint(GLV.model, initials, t, args=(noisyA, self.__r)).T
 
     def get_shuffled_sample(self, cohort):
         samples = cohort.copy()
-        sample = random.choice(samples)
-        non_zero_indexes = [i for i in range(len(sample)) if sample[i] > DOC.epsilon]
-        new_indexes = random.sample(non_zero_indexes, len(non_zero_indexes))
-        new_sample = sample.copy()
-        for i, j in zip(non_zero_indexes, new_indexes):
-            new_sample[j] = sample[i]
-        new_sample = np.array(new_sample)
-        # for i in range(len(sample)):
-        #     if sample[i] > DOC.epsilon:
-        #         sample[i] = random.choice([sam for sam in samples if sam[i] > DOC.epsilon])[i]
-        # new_sample = np.array(sample)
-        return new_sample / sum(new_sample)
+        sample = np.array([random.choice(samples)[i] for i in range(GLV.numOfPopulations)])
+        return sample / sum(sample)
 
     def get_shuffled_samples(self, m, cohort):
         samples = []

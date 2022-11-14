@@ -47,4 +47,4 @@ class DistanceCheck:
         return results
 
     def predict_real(self, cohort, samples):
-        return self.predict(samples)
+        return [self.calculate_mean_distance(cohort, sample) for sample in samples]

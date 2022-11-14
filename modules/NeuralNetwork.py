@@ -20,9 +20,7 @@ class NeuralNetwork:
         # define the keras model
         model = Sequential()
         model.add(Dense(50, input_shape=(GLV.numOfPopulations,), activation='relu'))
-        model.add(Dense(200, activation='relu'))
-        model.add(Dense(50, activation='relu'))
-        model.add(Dense(50, activation='relu'))
+        model.add(Dense(100, input_shape=(GLV.numOfPopulations,), activation='relu'))
         model.add(Dense(cohorts, activation='sigmoid'))
         # compile the keras model
         model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
@@ -38,7 +36,8 @@ class NeuralNetwork:
         return [predict.index(max(predict)) for predict in all_predicts]
 
     def predict_real(self, cohort, samples):
-        return self.predict(samples)
+        all_predicts = self.__model.predict(samples).tolist()
+        return [predict[0] for predict in all_predicts]
 
     def __str__(self):
         return "Neural Network"
