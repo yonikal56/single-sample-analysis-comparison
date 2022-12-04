@@ -14,10 +14,10 @@ class Graph:
             a, b = np.polyfit(x, y, 1)
             axs.plot(x, a * x + b, color='red', linestyle='-', linewidth=2)
 
-    def plot(self, x, y, axs, color='red', line_style='-', line_width=2, set_y_lim=True):
+    def plot(self, x, y, axs, color='red', line_style='-', line_width=2, set_y_lim=True, label=None):
         if set_y_lim:
             axs.set_ylim(0, max(y) + 0.05)
-        axs.plot(x, y, color=color, linestyle=line_style, linewidth=line_width)
+        axs.plot(x, y, color=color, linestyle=line_style, linewidth=line_width, label=label)
 
     def hist(self, x, axs):
         axs.hist(x, alpha=0.5)
