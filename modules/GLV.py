@@ -47,10 +47,10 @@ class GLV:
 
     def solve_model(self, initials, time=50, time_fractions=5):
         t = np.linspace(0, time, time_fractions)
-        noisyB = self.get_random_A()
-        delta = np.random.uniform(0, 0.3)
-        noisyA = (1 - delta) * np.array(self.__A) + delta * np.array(noisyB)
-        return odeint(GLV.model, initials, t, args=(noisyA, self.__r)).T
+        #noisyB = self.get_random_A()
+        #delta = np.random.uniform(0, 0.3)
+        #noisyA = (1 - delta) * np.array(self.__A) + delta * np.array(noisyB)
+        return odeint(GLV.model, initials, t, args=(self.__A, self.__r)).T
 
     def get_shuffled_sample(self, cohort):
         samples = cohort.copy()
@@ -143,7 +143,7 @@ def generate_random_shuffled_samples(chosen_model, num):
         model = GLV(r=chosen_model['r'], A=chosen_model['A'])
         is_real = GLV.decision(0.5)
         samples.append(model.get_sample() if is_real else model.get_shuffled_sample(chosen_model['cohort']))
-        real.append(0 if is_real else 1)
+        real.append(0 if is_real else 1) # 0 means real
         progress.update()
     del progress
     return samples, real

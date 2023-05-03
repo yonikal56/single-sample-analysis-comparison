@@ -56,9 +56,9 @@ def run_test(param_name, param):
     return results
 
 
-m_values = np.linspace(30, 200, num=15)
-bound_values = np.linspace(0.025, 0.1, num=15)
-probability_values = np.linspace(0.1, 1, num=15)
+m_values = np.linspace(20, 200, num=5)
+bound_values = np.linspace(0.0, 0.025, num=5)
+probability_values = np.linspace(0, 1, num=5)
 all_tests = {
     'm': m_values,
     'bound': bound_values,

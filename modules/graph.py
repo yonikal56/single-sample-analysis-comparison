@@ -4,10 +4,10 @@ import numpy as np
 
 class Graph:
     @staticmethod
-    def scatter(x, y, axs, fit=True, set_y_lim=True):
+    def scatter(x, y, axs, fit=True, set_y_lim=True, color=None):
         x = np.array(x)
         y = np.array(y)
-        axs.scatter(x, y, s=1)
+        axs.scatter(x, y, s=1, color=color)
         if set_y_lim:
             axs.set_ylim(0, max(y) + 0.05)
         if fit:
@@ -22,8 +22,11 @@ class Graph:
     def hist(self, x, axs):
         axs.hist(x, alpha=0.5)
 
-    def legend(self):
-        plt.legend()
+    def legend(self, size=None):
+        if size is not None:
+            plt.legend(prop={'size': size})
+        else:
+            plt.legend()
 
     def boxplot(self, data, axs, positions, width):
         axs.boxplot(data, showfliers=False, positions=positions, widths=width)
@@ -31,9 +34,15 @@ class Graph:
     def get_axes(self):
         return self.__axs
 
+    def get_fig(self):
+        return self.__fig
+
+    def get_plt(self):
+        return plt
+
     @staticmethod
     def show():
         plt.show()
 
     def __init__(self, *size):
-        fig, self.__axs = plt.subplots(*size)
+        self.__fig, self.__axs = plt.subplots(*size)

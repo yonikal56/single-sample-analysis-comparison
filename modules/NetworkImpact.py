@@ -16,6 +16,7 @@ class NetworkImpact:
                           self.predict_theta2]
         for model in self.__data['models']:
             self.__networks.append(self.calculate_network(np.array(model['cohort'])))
+            print(self.__networks[0])
 
     def calculate_bounds(self, cohort):
         m = len(cohort)
