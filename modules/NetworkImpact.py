@@ -12,8 +12,9 @@ class NetworkImpact:
         self.__networks = []
         self.__bounds = None
         self.__methods = [self.predict_structural_difference, self.predict_weight_difference,
+                          self.predict_origin_weight_difference,
                           self.predict_theta,
-                          self.predict_theta2]
+                          self.predict_origin_theta]
         for model in self.__data['models']:
             self.__networks.append(self.calculate_network(np.array(model['cohort'])))
             print(self.__networks[0])
@@ -70,7 +71,19 @@ class NetworkImpact:
         for i in range(n):
             for j in range(i + 1, n):
                 if abs(network_a[0][i][j]) > DOC.epsilon and abs(network_b[0][i][j]) > DOC.epsilon:
+                    # add the absolute difference
                     s += abs(network_a[0][i][j] - network_b[0][i][j])
+                    count += 1
+        return s / count
+
+    def predict_origin_weight_difference(self, network_a, network_b):
+        s = 0
+        count = 0
+        n = GLV.numOfPopulations
+        for i in range(n):
+            for j in range(i + 1, n):
+                if abs(network_a[0][i][j]) > DOC.epsilon and abs(network_b[0][i][j]) > DOC.epsilon:
+                    s += network_a[0][i][j] - network_b[0][i][j]
                     count += 1
         return s / count
 
@@ -86,10 +99,11 @@ class NetworkImpact:
                         decreased_weight_count += 1
                     else:
                         increased_weight_count += 1
+        # compare decreased / increased to 1
         val = (decreased_weight_count + DOC.epsilon) / (increased_weight_count + DOC.epsilon)
         return abs(1 - val)
 
-    def predict_theta2(self, network_a, network_b):
+    def predict_origin_theta(self, network_a, network_b):
         different_weight_count = 0
         decreased_weight_count = 0
         n = GLV.numOfPopulations
@@ -104,12 +118,12 @@ class NetworkImpact:
         return abs(0.5 - val)
 
     def predict(self, samples):
-        method_indexes = [0, 1, 2]
+        method_indexes = [0, 1, 2, 3, 4]
         methods = [self.__methods[i] for i in method_indexes]
         return self.calculate_prediction(samples, methods)
 
     def predict_real(self, cohort, samples):
-        method_indexes = [0, 1, 2, 3]
+        method_indexes = [0, 1, 2, 3, 4]
         methods = [self.__methods[i] for i in method_indexes]
         results = []
         m = len(samples)
@@ -157,5 +171,5 @@ class NetworkImpactHandler:
         return self.predict(samples)
 
     def __str__(self):
-        types = ['structural difference', 'weight difference', 'theta', 'theta2']
+        types = ['structural difference', 'weight difference', 'origin weight difference', 'theta', 'origin theta']
         return f'Network Impact - {types[self.__method]}'
