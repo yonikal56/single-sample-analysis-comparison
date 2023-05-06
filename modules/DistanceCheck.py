@@ -3,8 +3,8 @@ from scipy.spatial import distance
 
 
 class DistanceCheck:
-    methods = {'Bray-Curtis': (distance.braycurtis, 0.3),
-               'Euclidean': (distance.euclidean, 2)}
+    methods = {'Bray-Curtis': distance.braycurtis,
+               'Euclidean': distance.euclidean}
 
     def __str__(self):
         return f'{list(self.methods.keys())[self.__method]} Dissimilarity'
@@ -15,6 +15,7 @@ class DistanceCheck:
 
     @staticmethod
     def calculate_in_group_distance(cohort, method=0):
+        # calculate distance inside cohort
         distances = []
         for i in range(len(cohort)):
             for j in range(i+1, len(cohort)):
@@ -23,6 +24,7 @@ class DistanceCheck:
 
     @staticmethod
     def calculate_between_group_distance(cohort_a, cohort_b, method=0):
+        # calculate distance between two cohorts
         distances = []
         for i in range(len(cohort_a)):
             for j in range(len(cohort_b)):
@@ -31,13 +33,16 @@ class DistanceCheck:
 
     @staticmethod
     def calculate_distance(x, y, method):
-        return list(DistanceCheck.methods.values())[method][0](x, y)
+        # calculate distance in asked method
+        return list(DistanceCheck.methods.values())[method](x, y)
 
     def calculate_mean_distance(self, cohort, sample):
+        # calculate mean value of the sample distance with each sample inside cohort
         distances = np.array([DistanceCheck.calculate_distance(sample, x, self.__method) for x in cohort])
         return distances.mean()
 
     def predict(self, samples):
+        # get class prediction of each sample
         results = []
         for sample in samples:
             distances = []
@@ -47,4 +52,5 @@ class DistanceCheck:
         return results
 
     def predict_real(self, cohort, samples):
+        # get real mean distance for each sample
         return [self.calculate_mean_distance(cohort, sample) for sample in samples]

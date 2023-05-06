@@ -5,6 +5,7 @@ import itertools
 
 all_results = []
 
+
 def run_test(cohorts, m, num_of_samples, bound=0.025, probability=0.1):
     # create two different GLV models with m samples
     file_path = 'samples.json'
@@ -23,8 +24,12 @@ def run_test(cohorts, m, num_of_samples, bound=0.025, probability=0.1):
     network_impact1 = NetworkImpact.NetworkImpactHandler(network_impact_predictions, 0)
     network_impact2 = NetworkImpact.NetworkImpactHandler(network_impact_predictions, 1)
     network_impact3 = NetworkImpact.NetworkImpactHandler(network_impact_predictions, 2)
+    network_impact4 = NetworkImpact.NetworkImpactHandler(network_impact_predictions, 3)
+    network_impact5 = NetworkImpact.NetworkImpactHandler(network_impact_predictions, 4)
 
-    methods = [idoa, network, distance_check, distance_check2, network_impact1, network_impact2, network_impact3]
+    methods = [idoa, network, distance_check, distance_check2, network_impact1, network_impact2, network_impact3,
+               network_impact4, network_impact5]
+
 
     in_group_distances = []
     between_groups_distances = []

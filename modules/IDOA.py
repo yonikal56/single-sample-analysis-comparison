@@ -1,5 +1,4 @@
 import numpy as np
-import math
 from modules.DOC import DOC
 
 
@@ -9,6 +8,7 @@ class IDOA:
         self.__doc = DOC()
 
     def calculate_IDOA(self, cohort, sample, draw=False, graphs=None, axs=None):
+        # calculate IDO value by linear fit of DOC curve
         doc_points = [self.__doc.get_dissimilarity_overlap_point(sample, co) for co in cohort]
         x = []
         y = []
@@ -22,6 +22,7 @@ class IDOA:
         return idoa_value
 
     def predict(self, samples, include_values=False):
+        # for each sample calculate IDOA value with each cohort and return predict by smallest IDOA value
         results = []
         for sample in samples:
             idoa_values = []
@@ -33,13 +34,8 @@ class IDOA:
                 results.append(idoa_values.index(min(idoa_values)))
         return results
 
-    # def calculate_upper_value(self, cohort):
-    #     idoa_values = [self.calculate_IDOA(cohort[:i] + cohort[i+1:], cohort[i]) for i in range(len(cohort))]
-    #     idoa_values.sort()
-    #     bound = round(len(cohort) * 0.95)
-    #     return idoa_values[bound - 1]
-
     def predict_real(self, cohort, samples):
+        # return IDOA value for each test sample
         return [self.calculate_IDOA(cohort, sample, False) for sample in samples]
 
     def __str__(self):
