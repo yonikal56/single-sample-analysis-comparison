@@ -19,8 +19,11 @@ class Graph:
             axs.set_ylim(0, max(y) + 0.05)
         axs.plot(x, y, color=color, linestyle=line_style, linewidth=line_width, label=label)
 
-    def hist(self, x, axs):
-        axs.hist(x, alpha=0.5)
+    def hist(self, x, axs, color=None, alpha=0.5):
+        axs.hist(x, alpha=alpha, ec=color, density=True)
+
+    def bar(self, x, y, axs, labels=None, colors=None):
+        axs.barh(x,y, color=colors, label=labels)
 
     def legend(self, size=None):
         if size is not None:

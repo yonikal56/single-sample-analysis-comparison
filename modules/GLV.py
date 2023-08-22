@@ -8,6 +8,7 @@ from modules.progressbar import ProgressBar
 
 class GLV:
     numOfPopulations = 100
+    delta = None
 
     @staticmethod
     def decision(probability):
@@ -58,7 +59,10 @@ class GLV:
         t = np.linspace(0, time, time_fractions)
         # add noise
         noisyB = self.get_random_A()
-        delta = np.random.uniform(0, 0.3)
+        if self.delta is None:
+            delta = np.random.uniform(0, 0.3)
+        else:
+            delta = self.delta
         noisyA = (1 - delta) * np.array(self.__A) + delta * np.array(noisyB)
         # solve GLV equations
         return odeint(GLV.model, initials, t, args=(noisyA, self.__r)).T
@@ -109,7 +113,7 @@ class GLV:
         self.__A = A if A is not None else GLV.get_random_A()
 
 
-def generate_models(m, cohorts, file_path, bound=0.025, probability=0.1, force=False):
+def generate_models(m, cohorts, file_path, bound=0.025, probability=0.1, force=False, sameR=True):
     # generate cohorts
     # check if file does not exist or exist with different number of cohorts
     data = {}
@@ -124,9 +128,13 @@ def generate_models(m, cohorts, file_path, bound=0.025, probability=0.1, force=F
     if run_again or force:
         data = {}
         models = []
-        # create random r array
-        r = GLV.get_random_r()
+        if sameR:
+            # create random r array
+            r = GLV.get_random_r()
         for n in range(cohorts):
+            if not sameR:
+                # create random r array
+                r = GLV.get_random_r()
             # create random A for this model
             A = GLV.get_random_A(probability=probability, bound=bound)
             model = GLV(r=r, A=A)
