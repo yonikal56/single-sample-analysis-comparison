@@ -5,6 +5,7 @@ from modules.GLV import GLV
 
 class NeuralNetwork:
     def __init__(self, data):
+        self.__accuracy = None
         self.__model = None
         self.__data = data
         self.train()
@@ -30,9 +31,12 @@ class NeuralNetwork:
         model.fit(X, y, epochs=len(y), batch_size=10, verbose=0)
         # evaluate the keras model and print accuracy
         _, accuracy = model.evaluate(X, y)
-        print('Accuracy: %.2f' % (accuracy * 100))
+        self.__accuracy = accuracy * 100
         # save trained model for predictions
         self.__model = model
+
+    def get_accuracy(self):
+        return self.__accuracy
 
     def predict(self, samples):
         # prediction for all samples

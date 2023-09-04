@@ -12,7 +12,7 @@ def flatten_dict(d: MutableMapping, sep: str = '.') -> MutableMapping:
 
 
 data = {}
-file_path = 'test_results-4.json'
+file_path = 'test_results-3.json'
 with open(file_path) as file:
     data = [flatten_dict(test) for test in json.load(file)]
 
@@ -22,12 +22,12 @@ df = pd.DataFrame.from_dict(data)
 df['random'] = 100 / df['cohorts']
 df['distance.proportion'] = df['distance.between_groups'] / df['distance.in_group'] * 100
 df['distance.absolute'] = df['distance.between_groups'] - df['distance.in_group']
-sorted_df = df.sort_values(by=["delta"])
+sorted_df = df.sort_values(by=["m"])
 
 result_columns = [col for col in df.keys() if col.startswith('results.')]
-delta_values = sorted_df['delta'][::number_to_mean]
+m_values = sorted_df['m'][::number_to_mean]
 for col in result_columns:
-    graphs.get_axes().plot(delta_values, [np.mean(sorted_df[col][i*number_to_mean:(i+1)*number_to_mean]) for i in range(len(delta_values))], label=col[8:])
+    graphs.get_axes().plot(m_values, [np.mean(sorted_df[col][i*number_to_mean:(i+1)*number_to_mean]) for i in range(len(m_values))], label=col[8:])
     for i in df.index.values:
         old_value = round(df.at[i, col], 2)
         df.at[i, col] = str(old_value) + ' - ' + str(100 * old_value / df.at[i, 'random']) + '%'

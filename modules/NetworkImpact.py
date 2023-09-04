@@ -31,6 +31,9 @@ class NetworkImpact:
     def calculate_pearson_correlation_p_value(samples, i, j):
         # calculate pearson correlation with p-value
         shared_samples = samples[(samples[:, i] > DOC.epsilon) & (samples[:, j] > DOC.epsilon)]
+        # if not enough data - no correlation at all
+        if len(shared_samples) < 2:
+            return 0, 0
         result = stats.pearsonr(shared_samples[:, i], shared_samples[:, j])
         return result[0], result[1]
 

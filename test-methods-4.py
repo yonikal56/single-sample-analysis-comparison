@@ -5,12 +5,12 @@ import json
 all_results = []
 
 cohorts = 2
-num_of_runs = 2
+num_of_runs = 4
 m = 100
 num_of_samples = 100
 bound = 0.025
 probability = 0.1
-delta_values = np.linspace(0, 0.5, 10)
+delta_values = np.linspace(0, 0.5, 20)
 
 
 def run_test(num_of_samples, delta):
@@ -82,10 +82,10 @@ def run_test(num_of_samples, delta):
 
 for delta in delta_values:
     tests_results = []
-    for _ in range(num_of_runs):
+    for nummm in range(num_of_runs):
+        print(f'delta: {delta}, iteration number: {nummm}')
         tests_results.append(run_test(num_of_samples, delta))
     all_results += tests_results
-file_path = 'test_results.json'
+file_path = 'test_results-4.json'
 with open(file_path, 'w') as outfile:
     json.dump(all_results, outfile)
-

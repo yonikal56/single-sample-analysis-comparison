@@ -84,6 +84,6 @@ for m in m_values:
         tests_results.append(run_test(data, m, samples, real))
     all_results += tests_results
 print(all_results)
-file_path = 'test_results.json'
+file_path = 'test_results-4.json'
 with open(file_path, 'w') as outfile:
     json.dump(all_results, outfile)
