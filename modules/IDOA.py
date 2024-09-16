@@ -7,7 +7,7 @@ class IDOA:
         self.__data = data
         self.__doc = DOC()
 
-    def calculate_IDOA(self, cohort, sample, draw=False, graphs=None, axs=None):
+    def calculate_IDOA(self, cohort, sample, get_points=False):
         # calculate IDO value by linear fit of DOC curve
         doc_points = [self.__doc.get_dissimilarity_overlap_point(sample, co) for co in cohort]
         x = []
@@ -17,8 +17,8 @@ class IDOA:
                 x.append(ov)
                 y.append(dis)
         idoa_value = np.polyfit(x, y, 1)[0]
-        if draw:
-            graphs.scatter(x, y, axs)
+        if get_points is True:
+            return x, y
         return idoa_value
 
     def predict(self, samples, include_values=False):

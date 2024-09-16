@@ -74,6 +74,7 @@ def run_test(num_of_samples, m):
             results.append((prediction, re, re == prediction))
         success_rate = (num_of_success / len(real)) * 100
         test_results['results'][str(method)] = success_rate
+    print(test_results)
     return test_results
 
 

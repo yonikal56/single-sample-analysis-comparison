@@ -4,10 +4,10 @@ import numpy as np
 
 class Graph:
     @staticmethod
-    def scatter(x, y, axs, fit=True, set_y_lim=True, color=None):
+    def scatter(x, y, axs, fit=False, set_y_lim=False, color=None, size=1, label=None):
         x = np.array(x)
         y = np.array(y)
-        axs.scatter(x, y, s=1, color=color)
+        axs.scatter(x, y, color=color, s=size, label=label)
         if set_y_lim:
             axs.set_ylim(0, max(y) + 0.05)
         if fit:
@@ -19,8 +19,8 @@ class Graph:
             axs.set_ylim(0, max(y) + 0.05)
         axs.plot(x, y, color=color, linestyle=line_style, linewidth=line_width, label=label)
 
-    def hist(self, x, axs, color=None, alpha=0.5):
-        axs.hist(x, alpha=alpha, ec=color, density=True)
+    def hist(self, x, axs, color=None, alpha=0.5, label=None):
+        axs.hist(x, alpha=alpha, ec=color, density=True, label=label)
 
     def bar(self, x, y, axs, labels=None, colors=None):
         axs.barh(x,y, color=colors, label=labels)
@@ -47,5 +47,10 @@ class Graph:
     def show():
         plt.show()
 
-    def __init__(self, *size):
+    def set_title(self, title):
+        self.__fig.suptitle(title, fontsize=16)
+
+    def __init__(self, *size, title=None):
         self.__fig, self.__axs = plt.subplots(*size)
+        if title is not None:
+            self.__fig.canvas.manager.set_window_title(title)

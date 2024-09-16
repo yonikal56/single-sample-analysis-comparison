@@ -72,8 +72,7 @@ class GLV:
         samples = cohort.copy()
         # each index is shuffled sample is a value from random sample inside cohort in the same index
         sample = np.array([random.choice(samples)[i] for i in range(GLV.numOfPopulations)])
-        # normalize
-        return sample / sum(sample)
+        return sample
 
     def get_shuffled_samples(self, m, cohort):
         # create m shuffled samples
@@ -90,6 +89,7 @@ class GLV:
         initials = self.get_random_initials()
         data = self.solve_model(initials)
         populations = np.array([a[-1] for a in data])
+        #return populations  # use for unsupervised classification
         return populations / sum(populations)
 
     def get_samples(self, m):

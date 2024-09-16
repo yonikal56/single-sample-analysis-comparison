@@ -1,28 +1,18 @@
 from modules import *
 import numpy as np
 import json
-from sklearn.preprocessing import StandardScaler
-from sklearn.decomposition import PCA
-import itertools
-import pandas as pd
 
 all_results = []
 
-cohort_values = [2, 3, 4, 5]
-num_of_runs = 1
-m_values = [100]
-samples_values = [100]
+cohorts_values = list(range(2,6))
+num_of_runs = 4
+m = 100
+num_of_samples = 100
 bound = 0.025
 probability = 0.1
 
-tests = list(itertools.product(cohort_values, m_values, samples_values))
 
-graphs = graph.Graph(2, len(tests))
-
-x = ['IDOA', 'NN', 'Bray-Curtis', 'Euclidean', 'NI - SD', 'NI - WD', 'NI - OWD', 'NI - T', 'NI - OT']
-colors = np.random.rand(9, 3)
-
-def run_test(cohorts, m, num_of_samples, iteration_number, bound=0.025, probability=0.1):
+def run_test(num_of_samples, cohorts):
     # create two different GLV models with m samples
     file_path = 'samples.json'
     data = GLV.generate_models(m, cohorts, file_path, bound=bound, probability=probability, force=True)
@@ -46,10 +36,6 @@ def run_test(cohorts, m, num_of_samples, iteration_number, bound=0.025, probabil
     methods = [idoa, network, distance_check, distance_check2, network_impact1, network_impact2, network_impact3,
                network_impact4, network_impact5]
 
-    # initialise the standard scaler
-    sc = StandardScaler()
-    # set the components to 2
-    pca = PCA(n_components=2, whiten=True)
     states = []
 
     in_group_distances = []
@@ -64,29 +50,11 @@ def run_test(cohorts, m, num_of_samples, iteration_number, bound=0.025, probabil
                                                                                     data['models'][j]['cohort'])
             between_groups_distances.append(distance)
 
-    # plot PCA
-    df = pd.DataFrame.from_dict(states)
-
-    df_scaled = pd.DataFrame(sc.fit_transform(df), columns=df.columns)
-
-    pca.fit(df_scaled)
-
-    # fit the model to our data and extract the results
-    X_pca = pca.transform(df_scaled)
-
-    # create a dataframe from the dataset
-    df = pd.DataFrame(data=X_pca,
-                      columns=["Component1",
-                               "Component2"])
-
-    for i in range(cohorts):
-        graphs.scatter(df['Component1'].iloc[m*i:m*(i+1) - 1], df['Component2'].iloc[m*i:m*(i+1) - 1], graphs.get_axes()[0][iteration_number], False,
-                       False)
-
     test_results = {
         'm': m,
         'cohorts': cohorts,
         'tests': len(real),
+        'nn_accuracy': network.get_accuracy(),
         'distance': {
             'in_group': np.array(in_group_distances).mean(),
             'between_groups': np.array(between_groups_distances).mean()
@@ -96,41 +64,26 @@ def run_test(cohorts, m, num_of_samples, iteration_number, bound=0.025, probabil
         }
     }
 
-    y = []
-
     for method in methods:
         num_of_success = 0
-        print(f'method:{str(method)}')
         predictions = method.predict(np.array(samples))
         results = []
         for prediction, re in zip(predictions, real):
             if re == prediction:
                 num_of_success += 1
             results.append((prediction, re, re == prediction))
-        print(results)
         success_rate = (num_of_success / len(real)) * 100
-        y.append(success_rate)
-        print(f'success_rate : {success_rate}')
-        print('------------------------')
         test_results['results'][str(method)] = success_rate
-    print(f'test results - {test_results}\n\n')
-
-    graphs.bar(x if iteration_number == 0 else range(len(y)),y, graphs.get_axes()[1][iteration_number], colors=colors)
-
     return test_results
 
-i = 0
-for cohorts, m, num_of_samples in tests:
+
+for cohorts in cohorts_values:
     tests_results = []
     for _ in range(num_of_runs):
-        print(f'cohorts: {cohorts}, m: {m}, samples: {num_of_samples}')
-        tests_results.append(run_test(cohorts, m, num_of_samples, i, bound, probability))
-        i += 1
+        tests_results.append(run_test(num_of_samples, cohorts))
     all_results += tests_results
-print(all_results)
 file_path = 'test_results-5.json'
 with open(file_path, 'w') as outfile:
     json.dump(all_results, outfile)
 
-graphs.legend()
-graphs.show()
+print("finished all!")

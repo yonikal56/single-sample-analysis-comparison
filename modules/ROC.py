@@ -27,6 +27,9 @@ class ROC:
     def add_graph(self, real, predicted_values, label):
         # get ROC graph points and AUC value
         x, y, auc = self.get_points(real, predicted_values)
+        # if auc less than 0.5, flip sides of real/shuffled
+        if auc < 0.5:
+            x, y, auc = self.get_points([1 - r for r in real], predicted_values)
         if self.__plot:
             # plot ROC graph if needed with the correct label (allows to plot multiple graphs together)
             plt.plot(x, y, label=f'{label} - {round(auc, 2)}')
