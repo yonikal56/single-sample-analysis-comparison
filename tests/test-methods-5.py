@@ -4,17 +4,17 @@ import json
 
 all_results = []
 
-cohorts = 2
+cohorts_values = list(range(2,6))
 num_of_runs = 4
-m_values = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 60, 70, 80, 90, 100, 150, 200, 300, 400, 500]
+m = 100
 num_of_samples = 100
 bound = 0.025
 probability = 0.1
 
 
-def run_test(num_of_samples, m):
+def run_test(num_of_samples, cohorts):
     # create two different GLV models with m samples
-    file_path = 'samples.json'
+    file_path = '../samples.json'
     data = GLV.generate_models(m, cohorts, file_path, bound=bound, probability=probability, force=True)
 
     network = NeuralNetwork.NeuralNetwork(data)
@@ -74,16 +74,15 @@ def run_test(num_of_samples, m):
             results.append((prediction, re, re == prediction))
         success_rate = (num_of_success / len(real)) * 100
         test_results['results'][str(method)] = success_rate
-    print(test_results)
     return test_results
 
 
-for m in m_values:
+for cohorts in cohorts_values:
     tests_results = []
     for _ in range(num_of_runs):
-        tests_results.append(run_test(num_of_samples, m))
+        tests_results.append(run_test(num_of_samples, cohorts))
     all_results += tests_results
-file_path = 'test_results-3.json'
+file_path = '../test_results-5.json'
 with open(file_path, 'w') as outfile:
     json.dump(all_results, outfile)
 

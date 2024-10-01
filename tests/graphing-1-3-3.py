@@ -12,7 +12,7 @@ cohorts = 2
 GLV.GLV.numOfPopulations = 20
 
 # create two different GLV models with m samples
-file_path = 'samples.json'
+file_path = '../samples.json'
 data = GLV.generate_models(m, 1, file_path, force=True, sameR=False, bound=0.025)
 
 fig, axes = plt.subplot_mosaic("ABE;CCC", constrained_layout=True, gridspec_kw={

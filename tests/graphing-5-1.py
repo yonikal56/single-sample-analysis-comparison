@@ -12,7 +12,7 @@ cohorts = 2
 GLV.GLV.numOfPopulations = 20
 
 # create two different GLV models with m samples
-file_path = 'samples.json'
+file_path = '../samples.json'
 data = GLV.generate_models(m, 1, file_path, force=True, sameR=False, bound=0.025)
 
 fig, axes = plt.subplots(nrows=1, ncols=3, gridspec_kw={'width_ratios': [10, 1, 1], 'wspace': 0.5}, figsize =(11, 8))

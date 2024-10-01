@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 m = 100
 num_of_samples = 200
 
-file_path = 'shuffled-samples.json'
+file_path = '../shuffled-samples.json'
 data = GLV.generate_models(m, 1, file_path, force=True, bound=0.025)
 
 samples, real = GLV.generate_random_shuffled_samples(data['models'][0], num_of_samples)

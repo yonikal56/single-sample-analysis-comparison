@@ -17,7 +17,7 @@ def flatten_dict(d: MutableMapping, sep: str = '.') -> MutableMapping:
 
 
 data = {}
-file_path = 'test_results-3.json'
+file_path = '../test_results-3.json'
 with open(file_path) as file:
     data = [flatten_dict(test) for test in json.load(file)]
 
@@ -39,7 +39,7 @@ for col in result_columns:
         df.at[i, col] = str(old_value) + ' - ' + str(100 * old_value / df.at[i, 'random']) + '%'
 
 data = {}
-file_path = 'test_results-4.json'
+file_path = '../test_results-4.json'
 with open(file_path) as file:
     data = [flatten_dict(test) for test in json.load(file)]
 

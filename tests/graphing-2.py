@@ -133,13 +133,13 @@ def plot_cohorts_pca_distances_all(cohorts_arr, titles):
 
     graphs.show()
 
-file_path = 'samples-1-dist.json'
+file_path = '../samples-1-dist.json'
 # data = GLV.generate_models(m, cohorts, file_path, force=False, sameR=True, bound=0.025)
 # plot_cohorts_pca_distances(data['models'][0]['cohort'], data['models'][1]['cohort'], "graph 1", False)
-data1 = GLV.generate_models(m, cohorts, 'samples-2-1.json', force=False, sameR=False, bound=0.025)
-data2 = GLV.generate_models(m, cohorts, 'samples-2-2.json', force=False, sameR=True, bound=0.1)
-data3 = GLV.generate_models(m, cohorts, 'samples-2-3.json', force=False, sameR=True, bound=0.04)
-data4 = GLV.generate_models(m, cohorts, 'samples-2-4.json', force=True, sameR=True, bound=0.025)
-data5 = GLV.generate_models(m, cohorts, 'samples-2-5.json', force=False, sameR=True, bound=0.015)
+data1 = GLV.generate_models(m, cohorts, '../samples-2-1.json', force=False, sameR=False, bound=0.025)
+data2 = GLV.generate_models(m, cohorts, '../samples-2-2.json', force=False, sameR=True, bound=0.1)
+data3 = GLV.generate_models(m, cohorts, '../samples-2-3.json', force=False, sameR=True, bound=0.04)
+data4 = GLV.generate_models(m, cohorts, '../samples-2-4.json', force=True, sameR=True, bound=0.025)
+data5 = GLV.generate_models(m, cohorts, '../samples-2-5.json', force=False, sameR=True, bound=0.015)
 data = [data1, data2, data3, data4, data5]
 plot_cohorts_pca_distances_all([(one_dataset['models'][0]['cohort'], one_dataset['models'][1]['cohort']) for one_dataset in data], ['a', 'b', 'c', 'd', 'e'])

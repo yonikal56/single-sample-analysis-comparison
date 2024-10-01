@@ -9,7 +9,7 @@ bound = 0.025
 probability = 0.1
 
 # create two different GLV models with m samples
-file_path = 'samples.json'
+file_path = '../samples.json'
 data = GLV.generate_models(m, cohorts, file_path, bound=bound, probability=probability, force=True)
 idoa = IDOA.IDOA(data)
 samples, real = GLV.generate_random_samples(data, 1)

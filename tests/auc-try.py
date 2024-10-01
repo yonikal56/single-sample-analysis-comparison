@@ -14,7 +14,7 @@ for method_label in method_labels:
 
 
 def run_test():
-    file_path = 'shuffled-samples-auc.json'
+    file_path = '../shuffled-samples-auc.json'
     data = GLV.generate_models(m, 1, file_path, force=True, bound=0.025)
     data['models'].append({
         'r': data['models'][0]['r'],
@@ -60,6 +60,6 @@ for i in range(number_of_runs):
     print(f'--run number {i + 1} from {number_of_runs}:')
     run_test()
 
-file_path = 'test_results-auc.json'
+file_path = '../test_results-auc.json'
 with open(file_path, 'w') as outfile:
     json.dump(all_results, outfile)

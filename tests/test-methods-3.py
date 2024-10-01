@@ -6,17 +6,15 @@ all_results = []
 
 cohorts = 2
 num_of_runs = 4
-m = 100
+m_values = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 60, 70, 80, 90, 100, 150, 200, 300, 400, 500]
 num_of_samples = 100
 bound = 0.025
 probability = 0.1
-delta_values = np.linspace(0, 0.5, 20)
 
 
-def run_test(num_of_samples, delta):
+def run_test(num_of_samples, m):
     # create two different GLV models with m samples
-    GLV.GLV.delta = delta
-    file_path = 'samples.json'
+    file_path = '../samples.json'
     data = GLV.generate_models(m, cohorts, file_path, bound=bound, probability=probability, force=True)
 
     network = NeuralNetwork.NeuralNetwork(data)
@@ -52,12 +50,11 @@ def run_test(num_of_samples, delta):
                                                                                     data['models'][j]['cohort'])
             between_groups_distances.append(distance)
 
-
     test_results = {
         'm': m,
         'cohorts': cohorts,
         'tests': len(real),
-        'delta': delta,
+        'nn_accuracy': network.get_accuracy(),
         'distance': {
             'in_group': np.array(in_group_distances).mean(),
             'between_groups': np.array(between_groups_distances).mean()
@@ -77,15 +74,17 @@ def run_test(num_of_samples, delta):
             results.append((prediction, re, re == prediction))
         success_rate = (num_of_success / len(real)) * 100
         test_results['results'][str(method)] = success_rate
+    print(test_results)
     return test_results
 
 
-for delta in delta_values:
+for m in m_values:
     tests_results = []
-    for nummm in range(num_of_runs):
-        print(f'delta: {delta}, iteration number: {nummm}')
-        tests_results.append(run_test(num_of_samples, delta))
+    for _ in range(num_of_runs):
+        tests_results.append(run_test(num_of_samples, m))
     all_results += tests_results
-file_path = 'test_results-4.json'
+file_path = '../test_results-3.json'
 with open(file_path, 'w') as outfile:
     json.dump(all_results, outfile)
+
+print("finished all!")

@@ -11,7 +11,7 @@ total_data = {
 }
 
 for cohorts in cohorts_values:
-    file_path = 'multi-samples.json'
+    file_path = '../multi-samples.json'
     data = GLV.generate_models(m, cohorts, file_path, force=True)
 
     states = []
@@ -23,6 +23,6 @@ for cohorts in cohorts_values:
         "points": states
     })
 
-file_path = 'test_results-5-pca.json'
+file_path = '../test_results-5-pca.json'
 with open(file_path, 'w') as outfile:
     json.dump(total_data, outfile)
