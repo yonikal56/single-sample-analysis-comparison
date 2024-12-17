@@ -17,12 +17,13 @@ def flatten_dict(d: MutableMapping, sep: str = '.') -> MutableMapping:
 
 
 data = {}
-file_path = '../test_results-5.json'
+file_path = '../multiclass_tests_results.json'
 with open(file_path) as file:
     data = [flatten_dict(test) for test in json.load(file)]
-pca_data = {}
 
-file_path = '../test_results-5-pca.json'
+
+pca_data = {}
+file_path = '../multiclass_pca_data.json'
 with open(file_path) as file:
     pca_data = json.load(file)
 

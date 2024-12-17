@@ -12,7 +12,7 @@ cohorts = 2
 GLV.GLV.numOfPopulations = 20
 
 # create two different GLV models with m samples
-file_path = '../samples.json'
+file_path = '../schematic_idoa_samples.json'
 data = GLV.generate_models(m, 1, file_path, force=True, sameR=False, bound=0.025)
 
 fig, axes = plt.subplot_mosaic("ABE;CCC", constrained_layout=True, gridspec_kw={
@@ -42,7 +42,7 @@ ax1.axis('off')
 ax2.axis('off')
 ax1.title.set_size(13)
 ax2.title.set_size(13)
-axes['C'].imshow(mpimg.imread("../article figures/1-3-network.png"), aspect='auto')
+axes['C'].imshow(mpimg.imread("../../article figures/1-3-network.png"), aspect='auto')
 axes['C'].axis('off')
 axes['C'].set_title('Ref.', fontsize=13, loc='left', x=0.2)
 axes['C'].text(520, -6, 'Ref. + Test', size=13)

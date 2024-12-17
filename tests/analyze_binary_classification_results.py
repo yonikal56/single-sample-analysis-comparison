@@ -17,7 +17,7 @@ def flatten_dict(d: MutableMapping, sep: str = '.') -> MutableMapping:
 
 
 data = {}
-file_path = '../test_results-3.json'
+file_path = '../binary_classification_results.json'
 with open(file_path) as file:
     data = [flatten_dict(test) for test in json.load(file)]
 

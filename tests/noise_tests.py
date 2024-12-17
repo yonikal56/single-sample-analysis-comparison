@@ -16,7 +16,7 @@ delta_values = np.linspace(0, 0.5, 20)
 def run_test(num_of_samples, delta):
     # create two different GLV models with m samples
     GLV.GLV.delta = delta
-    file_path = '../samples.json'
+    file_path = '../noise_tests_samples.json'
     data = GLV.generate_models(m, cohorts, file_path, bound=bound, probability=probability, force=True)
 
     network = NeuralNetwork.NeuralNetwork(data)
@@ -86,6 +86,6 @@ for delta in delta_values:
         print(f'delta: {delta}, iteration number: {nummm}')
         tests_results.append(run_test(num_of_samples, delta))
     all_results += tests_results
-file_path = '../test_results-4.json'
+file_path = '../noise_tests_results.json'
 with open(file_path, 'w') as outfile:
     json.dump(all_results, outfile)

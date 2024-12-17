@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 m = 100
 num_of_samples = 100
 
-file_path = '../shuffled-samples.json'
+file_path = '../semi_supervised_histograms_samples.json'
 data = GLV.generate_models(m, 1, file_path, force=True, bound=0.025)
 data['models'].append({
     'r': data['models'][0]['r'],

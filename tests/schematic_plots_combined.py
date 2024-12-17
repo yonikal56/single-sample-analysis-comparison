@@ -10,17 +10,17 @@ fig, axes = plt.subplot_mosaic("AA;BB;CE;DE", constrained_layout=True, gridspec_
 })
 
 # a - cohorts + test sample
-axes['A'].imshow(mpimg.imread("../article figures/1-1.png"), aspect='auto')
+axes['A'].imshow(mpimg.imread("../../article figures/1-1.png"), aspect='auto')
 axes['A'].set_title('a', loc='left', fontsize=15, weight='bold', x=0, y=0.9)
 axes['A'].axis('off')
 
 # b - distances
-axes['B'].imshow(mpimg.imread("../article figures/1-2.png"), aspect='auto')
+axes['B'].imshow(mpimg.imread("../../article figures/1-2.png"), aspect='auto')
 axes['B'].set_title('b', loc='left', fontsize=15, weight='bold', x=0, y=0.9)
 axes['B'].axis('off')
 
 # c - NN
-axes['C'].imshow(mpimg.imread("../article figures/1-3-2.png"), aspect='auto')
+axes['C'].imshow(mpimg.imread("../../article figures/1-3-2.png"), aspect='auto')
 axes['C'].set_title('c', loc='left', fontsize=15, weight='bold', x=0, y=1.2)
 axes['C'].set_xlabel(r'Neural Network (NN)', fontsize=10, y=2)
 axes['C'].set_frame_on(False)
@@ -29,7 +29,7 @@ axes['C'].set_yticks([])
 axes['C'].xaxis.set_label_position('top')
 
 # d - IDOA
-axes['D'].imshow(mpimg.imread("../article figures/1-3-1.png"))
+axes['D'].imshow(mpimg.imread("../../article figures/1-3-1.png"))
 axes['D'].set_title('e', loc='left', fontsize=15, weight='bold', x=-0.75, y=1.2)
 axes['D'].set_xlabel(r'Individual Dissimilarity-Overlap Analysis (IDOA)', fontsize=10)
 axes['D'].set_frame_on(False)
