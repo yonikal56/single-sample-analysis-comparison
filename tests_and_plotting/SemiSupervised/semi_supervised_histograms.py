@@ -7,7 +7,8 @@ import matplotlib.pyplot as plt
 m = 100
 num_of_samples = 100
 
-file_path = '../semi_supervised_histograms_samples.json'
+file_path = 'semi_supervised_histograms_samples.json'
+GLV.GLV.supervised = False
 data = GLV.generate_models(m, 1, file_path, force=True, bound=0.025)
 data['models'].append({
     'r': data['models'][0]['r'],
@@ -27,6 +28,7 @@ idoa = IDOA.IDOA(data)
 network_impact = NetworkImpact.NetworkImpact(data)
 distance_check = DistanceCheck.DistanceCheck(data)
 distance_check2 = DistanceCheck.DistanceCheck(data, 1)
+random_forest = RandomForest.RandomForest(data)
 
 # predictions
 network_impact_predictions = network_impact.predict_real(data['models'][0]['cohort'], samples)
@@ -37,10 +39,10 @@ network_impact4 = NetworkImpact.NetworkImpactHandler(network_impact_predictions,
 network_impact5 = NetworkImpact.NetworkImpactHandler(network_impact_predictions, 4)
 
 methods = [idoa, network, distance_check, distance_check2, network_impact1, network_impact2, network_impact3,
-           network_impact4, network_impact5]
+           network_impact4, network_impact5, random_forest]
 
-method_labels = ['IDOA', 'NN', 'DIS - BC', 'DIS - EUC', 'NI - SD', 'NI - WD1', 'NI - WD2', 'NI - T1', 'NI - T2']
-graphs = graph.Graph(3, 3)
+method_labels = Testing.Testing.get_methods_names()
+graphs = graph.Graph(4, 3)
 for i in range(len(methods)):
     axes = graphs.get_axes()[i // 3][i % 3]
     predictions = methods[i].predict_real(data['models'][0]['cohort'], np.array(samples))

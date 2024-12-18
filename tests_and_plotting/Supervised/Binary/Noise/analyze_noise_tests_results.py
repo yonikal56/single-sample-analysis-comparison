@@ -11,7 +11,7 @@ def flatten_dict(d: MutableMapping, sep: str = '.') -> MutableMapping:
 
 
 data = {}
-file_path = '../noise_tests_results.json'
+file_path = 'noise_tests_results.json'
 with open(file_path) as file:
     data = [flatten_dict(test) for test in json.load(file)]
 
@@ -31,6 +31,4 @@ for col in result_columns:
         df.at[i, col] = str(old_value) + ' - ' + str(100 * old_value / df.at[i, 'random']) + '%'
 graphs.legend()
 
-sorted_df.to_html('temp.html')
-webbrowser.open('../temp.html')
 graphs.show()

@@ -5,6 +5,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 import numpy as np
 import matplotlib.pyplot as plt
+from modules import Testing
 
 import matplotlib
 matplotlib.use("Qt5Agg")
@@ -17,13 +18,13 @@ def flatten_dict(d: MutableMapping, sep: str = '.') -> MutableMapping:
 
 
 data = {}
-file_path = '../multiclass_tests_results.json'
+file_path = 'multiclass_tests_results.json'
 with open(file_path) as file:
     data = [flatten_dict(test) for test in json.load(file)]
 
 
 pca_data = {}
-file_path = '../multiclass_pca_data.json'
+file_path = 'multiclass_pca_data.json'
 with open(file_path) as file:
     pca_data = json.load(file)
 
@@ -91,7 +92,7 @@ ax.xaxis.set_tick_params(labelsize=13)
 ax.yaxis.set_tick_params(labelsize=13)
 ax.set_ylim(0, 110)
 ax.set_xticks(cohorts_values)
-method_labels = ['IDOA', 'NN', 'DIS - BC', 'DIS - EUC', 'NI - SD', 'NI - WD1', 'NI - WD2', 'NI - T1', 'NI - T2']
+method_labels = Testing.Testing.get_methods_names()
 
 count = 0
 for col in result_columns:

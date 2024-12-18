@@ -2,7 +2,7 @@ import json
 from collections.abc import MutableMapping
 import pandas as pd
 import numpy as np
-from modules import graph
+from modules import graph, Testing
 
 import matplotlib
 matplotlib.use("Qt5Agg")
@@ -17,7 +17,7 @@ def flatten_dict(d: MutableMapping, sep: str = '.') -> MutableMapping:
 
 
 data = {}
-file_path = '../binary_classification_results.json'
+file_path = 'binary_classification_results.json'
 with open(file_path) as file:
     data = [flatten_dict(test) for test in json.load(file)]
 
@@ -39,7 +39,7 @@ for col in result_columns:
         df.at[i, col] = str(old_value) + ' - ' + str(100 * old_value / df.at[i, 'random']) + '%'
 
 data = {}
-file_path = '../test_results-4.json'
+file_path = 'Noise/noise_tests_results.json'
 with open(file_path) as file:
     data = [flatten_dict(test) for test in json.load(file)]
 
@@ -51,7 +51,7 @@ sorted_df = df.sort_values(by=["delta"])
 
 result_columns = [col for col in df.keys() if col.startswith('results.')]
 delta_values = sorted_df['delta'][::number_to_mean4]
-method_labels = ['IDOA', 'NN', 'DIS - BC', 'DIS - EUC', 'NI - SD', 'NI - WD1', 'NI - WD2', 'NI - T1', 'NI - T2']
+method_labels = Testing.Testing.get_methods_names()
 count = 0
 for col in result_columns:
     graphs.get_axes()[1].plot(delta_values,

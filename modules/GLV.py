@@ -9,6 +9,7 @@ from modules.progressbar import ProgressBar
 class GLV:
     numOfPopulations = 100
     delta = None
+    supervised = True
 
     @staticmethod
     def decision(probability):
@@ -89,8 +90,10 @@ class GLV:
         initials = self.get_random_initials()
         data = self.solve_model(initials)
         populations = np.array([a[-1] for a in data])
-        #return populations  # use for unsupervised classification
-        return populations / sum(populations)
+        if self.supervised:
+            return populations / sum(populations)
+        else:
+            return populations  # use for unsupervised classification
 
     def get_samples(self, m):
         # get m real samples

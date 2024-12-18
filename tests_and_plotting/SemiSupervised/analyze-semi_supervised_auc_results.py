@@ -5,7 +5,7 @@ import matplotlib
 matplotlib.use("Qt5Agg")
 
 data = {}
-file_path = '../semi_supervised_auc_results.json'
+file_path = 'semi_supervised_auc_results.json'
 with open(file_path) as file:
     data = json.load(file)
 
