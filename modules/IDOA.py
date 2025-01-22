@@ -3,6 +3,8 @@ from modules.DOC import DOC
 
 
 class IDOA:
+    real = False
+
     def __init__(self, data):
         self.__data = data
         self.__doc = DOC()
@@ -12,10 +14,17 @@ class IDOA:
         doc_points = [self.__doc.get_dissimilarity_overlap_point(sample, co) for co in cohort]
         x = []
         y = []
-        for dis, ov in doc_points:
-            if ov >= 0.5:
-                x.append(ov)
-                y.append(dis)
+        if IDOA.real:
+            doc_points.sort(key=lambda tup: tup[1])
+            high_index = len(doc_points) // 2
+            for i in range(high_index):
+                x.append(doc_points[i][1])
+                y.append(doc_points[i][0])
+        else:
+            for dis, ov in doc_points:
+                if ov >= 0.5:
+                    x.append(ov)
+                    y.append(dis)
         idoa_value = np.polyfit(x, y, 1)[0]
         if get_points is True:
             return x, y

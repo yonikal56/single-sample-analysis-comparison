@@ -19,7 +19,9 @@ group_1_vectors = np.array([(np.array(df[col].tolist())/sum(df[col].tolist()))[:
 group_2_vectors = np.array([(np.array(df[col].tolist())/sum(df[col].tolist()))[:-1] for col in group_2_columns])
 
 
-results = Testing.Testing.run_test_supervised_drop_one_out([group_1_vectors, group_2_vectors])
-file_path = 'supervised_results.json'
+results = Testing.Testing.run_test_semi_supervised_drop_one_out(group_1_vectors, group_2_vectors)
+print(results)
+file_path = 'semi_supervised_auc_results.json'
 with open(file_path, 'w') as outfile:
     json.dump(results, outfile)
+

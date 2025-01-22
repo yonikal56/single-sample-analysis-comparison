@@ -1,3 +1,4 @@
+import numpy as np
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from modules.GLV import GLV
@@ -28,9 +29,9 @@ class NeuralNetwork:
         # compile the keras model
         model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
         # fit the keras model on the dataset
-        model.fit(X, y, epochs=len(y), batch_size=10, verbose=0)
+        model.fit(np.array(X), np.array(y), epochs=len(y), batch_size=10, verbose=0)
         # evaluate the keras model and print accuracy
-        _, accuracy = model.evaluate(X, y)
+        _, accuracy = model.evaluate(np.array(X), np.array(y))
         self.__accuracy = accuracy * 100
         # save trained model for predictions
         self.__model = model
