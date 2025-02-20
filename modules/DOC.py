@@ -21,7 +21,7 @@ class DOC:
         xihat = np.array([xi[key] / shared_xi_sum for key in shared_keys])
         xjhat = np.array([xj[key] / shared_xj_sum for key in shared_keys])
         m = (xihat + xjhat) / 2
-        return math.sqrt((self.dkl(xihat, m) + self.dkl(xjhat, m)) / 2)
+        return math.sqrt(abs(self.dkl(xihat, m) + self.dkl(xjhat, m)) / 2)
 
     def _get_overlap(self, xi, xj, shared_keys=None):
         # return overlap of samples

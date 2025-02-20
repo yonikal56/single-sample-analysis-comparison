@@ -16,7 +16,7 @@ for method_label in method_labels:
 
 def run_test():
     file_path = 'semi_supervised_auc_samples.json'
-    data = GLV.generate_models(m, 1, file_path, force=True, bound=0.025)
+    data = GLV.generate_models(m, 1, file_path, force=True, bound=0.2, probability=0.5)
     data['models'].append({
         'r': data['models'][0]['r'],
         'A': data['models'][0]['A'],

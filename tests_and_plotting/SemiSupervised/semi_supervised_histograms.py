@@ -1,7 +1,8 @@
 from modules import *
 from sklearn.decomposition import PCA
 import numpy as np
-import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('TkAgg')
 
 # set constants
 m = 100
@@ -9,7 +10,7 @@ num_of_samples = 100
 
 file_path = 'semi_supervised_histograms_samples.json'
 GLV.GLV.supervised = False
-data = GLV.generate_models(m, 1, file_path, force=True, bound=0.025)
+data = GLV.generate_models(m, 1, file_path, force=True, bound=0.15)
 data['models'].append({
     'r': data['models'][0]['r'],
     'A': data['models'][0]['A'],
@@ -42,10 +43,17 @@ methods = [idoa, network, distance_check, distance_check2, network_impact1, netw
            network_impact4, network_impact5, random_forest]
 
 method_labels = Testing.Testing.get_methods_names()
+
+all_results = {}
+
+roc = ROC.ROC(False)
+
 graphs = graph.Graph(4, 3)
 for i in range(len(methods)):
     axes = graphs.get_axes()[i // 3][i % 3]
     predictions = methods[i].predict_real(data['models'][0]['cohort'], np.array(samples))
+    auc = roc.add_graph(real, predictions, str(methods[i]))
+    all_results[method_labels[i]] = auc
     graphs.hist([predictions[i] for i in range(len(predictions)) if real[i] == 0], axes, label="Real")
     graphs.hist([predictions[i] for i in range(len(predictions)) if real[i] == 1], axes, label="Shuffled")
     axes.ticklabel_format(axis="x", style="sci", scilimits=(1,2))
@@ -62,4 +70,5 @@ graphs.get_plt().subplots_adjust(left=0.1,
                                  hspace=0.5)
 graphs.get_fig().set_figwidth(11)
 graphs.get_fig().set_figheight(8)
+print(all_results)
 graphs.show()

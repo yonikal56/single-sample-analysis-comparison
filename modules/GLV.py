@@ -4,7 +4,7 @@ from scipy.integrate import odeint
 import json
 import os.path
 from modules.progressbar import ProgressBar
-
+from modules.DOC import DOC
 
 class GLV:
     numOfPopulations = 100
@@ -30,6 +30,7 @@ class GLV:
         # return random interaction matrix (A)
         # all values are from uniform distribution between -bound and bound
         Arandoms = np.random.uniform(-bound, bound, GLV.numOfPopulations * (GLV.numOfPopulations - 1))
+        #Arandoms = np.random.normal(0, 0.15, GLV.numOfPopulations * (GLV.numOfPopulations - 1))
         A = []
         for i in range(GLV.numOfPopulations):
             A.append([])
@@ -73,6 +74,15 @@ class GLV:
         samples = cohort.copy()
         # each index is shuffled sample is a value from random sample inside cohort in the same index
         sample = np.array([random.choice(samples)[i] for i in range(GLV.numOfPopulations)])
+        # different shuffling process
+        # sample = random.choice(samples)
+        # for i in range(GLV.numOfPopulations):
+        #     if sample[i] > DOC.epsilon:
+        #         options = []
+        #         for sample in samples:
+        #             if sample[i] > DOC.epsilon:
+        #                 options.append(sample)
+        #         sample[i] = random.choice(options)[i]
         return sample
 
     def get_shuffled_samples(self, m, cohort):

@@ -45,7 +45,7 @@ class Graph:
 
     @staticmethod
     def show():
-        plt.show()
+        plt.show(block=False)
 
     def set_title(self, title):
         self.__fig.suptitle(title, fontsize=16)
