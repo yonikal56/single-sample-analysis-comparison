@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 from modules import Testing
 
 import matplotlib
-matplotlib.use("Qt5Agg")
+#matplotlib.use("Qt5Agg")
 
 number_to_mean = 4
 
@@ -16,6 +16,9 @@ def flatten_dict(d: MutableMapping, sep: str = '.') -> MutableMapping:
     [flat_dict] = pd.json_normalize(d, sep=sep).to_dict(orient='records')
     return flat_dict
 
+
+cols_to_keep = ['results.IDOA', 'results.Neural Network', 'results.Bray-Curtis Dissimilarity', 'results.Network Impact - weight difference', 'results.Random Forest']
+method_labels = ['IDOA', 'NN', 'DIS - BC', 'NI - WD1', 'RF']
 
 data = {}
 file_path = 'multiclass_tests_results.json'
@@ -83,7 +86,7 @@ df['distance.proportion'] = df['distance.between_groups'] / df['distance.in_grou
 df['distance.absolute'] = df['distance.between_groups'] - df['distance.in_group']
 sorted_df = df.sort_values(by=["cohorts"])
 
-result_columns = [col for col in df.keys() if col.startswith('results.')]
+result_columns = cols_to_keep
 cohorts_values = sorted_df['cohorts'][::number_to_mean]
 ax = axes["E"]
 ax.set_xlabel('Number of cohorts', fontsize=13)
@@ -92,7 +95,6 @@ ax.xaxis.set_tick_params(labelsize=13)
 ax.yaxis.set_tick_params(labelsize=13)
 ax.set_ylim(0, 110)
 ax.set_xticks(cohorts_values)
-method_labels = Testing.Testing.get_methods_names()
 
 count = 0
 for col in result_columns:
@@ -105,4 +107,5 @@ ax.scatter(cohorts_values, [100 / cohort_value for cohort_value in cohorts_value
 fig.set_figwidth(15)
 fig.set_figheight(7)
 plt.legend(loc='lower center', bbox_to_anchor=(0.5, 0), prop={'size': 10}, fancybox=True, ncol=10, edgecolor="gray")
+plt.savefig('fig3.png')
 plt.show()

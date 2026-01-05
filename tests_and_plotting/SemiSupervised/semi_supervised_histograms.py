@@ -2,7 +2,7 @@ from modules import *
 from sklearn.decomposition import PCA
 import numpy as np
 import matplotlib
-matplotlib.use('TkAgg')
+#matplotlib.use('TkAgg')
 
 # set constants
 m = 100
@@ -39,18 +39,17 @@ network_impact3 = NetworkImpact.NetworkImpactHandler(network_impact_predictions,
 network_impact4 = NetworkImpact.NetworkImpactHandler(network_impact_predictions, 3)
 network_impact5 = NetworkImpact.NetworkImpactHandler(network_impact_predictions, 4)
 
-methods = [idoa, network, distance_check, distance_check2, network_impact1, network_impact2, network_impact3,
-           network_impact4, network_impact5, random_forest]
+methods = [idoa, distance_check, network_impact3]
 
-method_labels = Testing.Testing.get_methods_names()
+method_labels = ['IDOA', 'DIS - BC', 'NI - WD2']
 
 all_results = {}
 
 roc = ROC.ROC(False)
 
-graphs = graph.Graph(4, 3)
+graphs = graph.Graph(3, 1)
 for i in range(len(methods)):
-    axes = graphs.get_axes()[i // 3][i % 3]
+    axes = graphs.get_axes()[i % 3]
     predictions = methods[i].predict_real(data['models'][0]['cohort'], np.array(samples))
     auc = roc.add_graph(real, predictions, str(methods[i]))
     all_results[method_labels[i]] = auc
@@ -71,4 +70,5 @@ graphs.get_plt().subplots_adjust(left=0.1,
 graphs.get_fig().set_figwidth(11)
 graphs.get_fig().set_figheight(8)
 print(all_results)
+graphs.get_plt().savefig('../../../article figures/5-hist.png')
 graphs.show()

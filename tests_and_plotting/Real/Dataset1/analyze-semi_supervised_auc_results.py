@@ -2,7 +2,7 @@ import json
 import matplotlib.pyplot as plt
 
 import matplotlib
-matplotlib.use("Qt5Agg")
+#matplotlib.use("Qt5Agg")
 
 data = {}
 file_path = 'semi_supervised_auc_results.json'

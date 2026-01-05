@@ -2,16 +2,18 @@ import json
 import matplotlib.pyplot as plt
 
 import matplotlib
-matplotlib.use("Qt5Agg")
+#matplotlib.use("Qt5Agg")
 
 data = {}
 file_path = 'semi_supervised_null_model_auc_results.json'
 with open(file_path) as file:
     data = json.load(file)
 
+method_labels = ['IDOA', 'DIS - BC', 'NI - WD1', 'NI - WD2']
+
 box_plot_data = []
 labels = []
-for method in reversed(data.keys()):
+for method in reversed(method_labels):
     labels.append(method)
     box_plot_data.append(data[method])
 
@@ -19,4 +21,5 @@ fig = plt.figure(figsize =(11, 8))
 ax = fig.add_subplot(111)
 ax.boxplot(box_plot_data,patch_artist=True,labels=labels, vert = 0)
 ax.set_xlabel('AUC', fontsize=13)
+plt.savefig('null_model_auc.png')
 plt.show()
