@@ -1,3 +1,5 @@
+from numba import prange, njit
+
 from modules.GLV import GLV
 from modules.DOC import DOC
 from modules.progressbar import ProgressBar
@@ -5,6 +7,64 @@ import numpy as np
 import math
 from scipy import stats
 
+
+def prepare_threshold_table(max_n, p_threshold=0.001):
+    thresholds = np.zeros(max_n + 1)
+    for n in range(3, max_n + 1):
+        df = n - 2
+        t_crit = stats.t.ppf(1 - p_threshold / 2, df)
+        r_crit = np.sqrt(t_crit ** 2 / (t_crit ** 2 + df))
+        thresholds[n] = r_crit
+    return thresholds
+
+
+@njit(parallel=True)
+def calculate_network_numba(samples, epsilon, threshold_table):
+    n_samples_total, n_pops = samples.shape
+    network = np.eye(n_pops)
+    unweighted_network = np.eye(n_pops)
+
+    for i in prange(n_pops):
+        for j in range(i + 1, n_pops):
+            sum_x = 0.0
+            sum_y = 0.0
+            count = 0
+            for k in range(n_samples_total):
+                if samples[k, i] > epsilon and samples[k, j] > epsilon:
+                    sum_x += samples[k, i]
+                    sum_y += samples[k, j]
+                    count += 1
+
+            if count < 3:
+                continue
+
+            mean_x = sum_x / count
+            mean_y = sum_y / count
+
+            num = 0.0
+            den_x = 0.0
+            den_y = 0.0
+            for k in range(n_samples_total):
+                if samples[k, i] > epsilon and samples[k, j] > epsilon:
+                    dx = samples[k, i] - mean_x
+                    dy = samples[k, j] - mean_y
+                    num += dx * dy
+                    den_x += dx * dx
+                    den_y += dy * dy
+
+            if den_x > 0 and den_y > 0:
+                r = num / np.sqrt(den_x * den_y)
+
+                idx = min(count, len(threshold_table) - 1)
+                r_crit = threshold_table[idx]
+
+                if abs(r) >= r_crit:
+                    network[i, j] = r
+                    network[j, i] = r
+                    unweighted_network[i, j] = 1.0
+                    unweighted_network[j, i] = 1.0
+
+    return network, unweighted_network
 
 class NetworkImpact:
     def __init__(self, data):
@@ -39,14 +99,18 @@ class NetworkImpact:
 
     def calculate_network(self, samples):
         # calculate both weighted and unweighted network for all samples
-        n = GLV.numOfPopulations
-        network = [[1 if j == i else 0 for j in range(n)] for i in range(n)]
-        unweighted_network = [[1 if j == i else 0 for j in range(n)] for i in range(n)]
-        for i in range(n):
-            for j in range(i + 1, n):
-                pearson_correlation, p_value = self.calculate_pearson_correlation_p_value(samples, i, j)
-                network[i][j] = pearson_correlation if p_value < math.pow(10, -3) else 0
-                unweighted_network[i][j] = 1 if p_value < math.pow(10, -3) else 0
+        n_pops = GLV.numOfPopulations
+        epsilon = DOC.epsilon
+        max_samples = samples.shape[0]
+
+        # 1. הכנת הטבלה (קורה פעם אחת, מהיר מאוד)
+        threshold_table = prepare_threshold_table(max_samples, p_threshold=0.001)
+
+        # 2. הרצה של Numba
+        network, unweighted_network = calculate_network_numba(
+            samples, epsilon, threshold_table
+        )
+
         return network, unweighted_network
 
     def predict_structural_difference(self, network_a, network_b):
