@@ -5,7 +5,7 @@ import json
 # set constants
 m = 100
 num_of_samples = 100
-number_of_runs = 100
+number_of_runs = 10
 
 GLV.GLV.supervised = False
 method_labels = Testing.Testing.get_methods_names()

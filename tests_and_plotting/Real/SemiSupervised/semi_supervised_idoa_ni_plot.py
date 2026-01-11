@@ -52,7 +52,7 @@ for key, label in labels.items():
     if key not in samples.keys():
         continue
     if label == 0:  # healthy
-        healthy_cohort.append(np.array(samples[key])/sum(samples[key]))
+        healthy_cohort.append(np.array(samples[key]))
 
 
 IDOA.IDOA.real = True
@@ -64,7 +64,7 @@ shuffled_cohort = [np.array([random.choice(healthy_cohort)[i] for i in range(GLV
 
 data = {
     'models': [{
-        'cohort': healthy_cohort[:num_of_samples],
+        'cohort': healthy_cohort[:100],
     },
     {
         'cohort': shuffled_cohort
@@ -72,11 +72,11 @@ data = {
 }
 data['models'][0]['cohort'] = [sample/sum(sample) for sample in data['models'][0]['cohort']]
 data['models'][1]['cohort'] = [sample/sum(sample) for sample in data['models'][1]['cohort']]
-samples = healthy_cohort[num_of_samples:]
-shuffled_samples = [np.array([random.choice(samples)[i] for i in range(GLV.GLV.numOfPopulations)]) for _ in range(num_of_samples)]
+samples = healthy_cohort[100:]
+shuffled_samples = [np.array([random.choice(samples)[i] for i in range(GLV.GLV.numOfPopulations)]) for _ in range(40)]
 samples = samples + shuffled_samples
 samples = [sample/sum(sample) for sample in samples]
-real = [0] * num_of_samples + [1] * len(shuffled_samples)
+real = [0] * 40 + [1] * 40
 
 
 idoa = IDOA.IDOA(data)

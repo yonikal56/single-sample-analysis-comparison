@@ -53,7 +53,7 @@ for key, label in labels.items():
     if key not in samples.keys():
         continue
     if label == 0:  # healthy
-        healthy_cohort.append(np.array(samples[key])/sum(samples[key]))
+        healthy_cohort.append(np.array(samples[key]))
 
 
 IDOA.IDOA.real = True
